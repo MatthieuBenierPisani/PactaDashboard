@@ -33,7 +33,6 @@ async function scrapArticles() {
                     fullElem.push(elem)
                 //console.log()
             });
-            console.log(fullElem)
             resolve(fullElem)
         } catch (e) {
             console.log('Error in function', arguments.callee.name, e)

@@ -115,6 +115,101 @@
             </ol>
           </div>
 
+
+
+
+
+
+
+          <!-- SCRAPPED ARTICLES -->
+
+          <div class="row mb-12">
+              <button style = "width: 100px; height: 100px;" id="getArticles">Actualiser les nouveaux articles</button>
+              <br><br />
+              <br><br />
+              <br><br />
+              <br><br />
+              <div id="listArticles" class="col-xl-12 col-md-12 mb-4">
+                <div class="card ">
+                  <div class="card-body">
+                    <div class="row align-items-center">
+                      <div class="col mr-2">
+                        <div class="text-xs font-weight-bold text-uppercase mb-1">Earnings (Monthly)</div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800">$40,000</div>
+                        <div class="mt-2 mb-0 text-muted text-xs">
+                          <span class="text-success mr-2"><i class="fa fa-arrow-up"></i> 3.48%</span>
+                          <span>Since last month</span>
+                        </div>
+                      </div>
+                      <div class="col-auto">
+                        <i class="fas fa-calendar fa-2x text-primary"></i>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+          </div>
+
+        <script>
+          var model = `<div class="card ">
+                        <div class="card-body">
+                          <div class="row align-items-center">
+                            <div class="col mr-2">
+                              <div class="text-xs font-weight-bold text-uppercase mb-1">[TITLE]</div>
+                              <div class="h5 mb-0 font-weight-bold text-gray-800">[DESCRIPTION]</div>
+                              <div class="mt-2 mb-0 text-muted text-xs">
+                                <span>[TAGS]</span>
+                              </div>
+                            </div>
+                            <div class="col-auto">
+                              <i class="fas fa-calendar fa-2x text-primary"></i>
+                            </div>
+                          </div>
+                        </div>
+                      </div>`
+
+          document.getElementById('getArticles').addEventListener('click', event => {
+            var div = document.getElementById('listArticles');
+            while (div.firstChild) {
+              div.removeChild(div.firstChild);
+            }
+            var xhr = new XMLHttpRequest();
+            xhr.open("GET", "/askArticles", true);
+            xhr.onload = function (e) {
+              if (xhr.readyState === 4) {
+                if (xhr.status === 200) {
+                  var resAll = ""
+                  for (var i of JSON.parse(xhr.responseText)) {
+                    console.log(i)
+                    var res = model.replace("[TITLE]", i.title)
+                    res = res.replace("[DESCRIPTION]", i.description)
+                    var tags = ""
+                    for (var j of i.tags) {
+                      tags = tags + j + " - "
+                    }
+                    tags = tags.substr(0, tags.length - 2)
+                    res = res.replace("[TAGS]", tags)
+                    resAll = resAll + res
+                  }
+                  document.getElementById('listArticles').innerHTML = resAll
+                } else {
+                  console.error(xhr.statusText);
+                }
+              }
+            };
+            xhr.onerror = function (e) {
+              console.error(xhr.statusText);
+            };
+            xhr.send(null); 
+          });
+        </script>
+
+        <!-- SCRAPPED ARTICLES -->
+
+
+
+
+
           <div class="row mb-3">
             <!-- Earnings (Monthly) Card Example -->
             <div class="col-xl-3 col-md-6 mb-4">

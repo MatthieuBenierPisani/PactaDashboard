@@ -13,9 +13,10 @@ var server = app.listen(8000, function () {
     console.log('Express app listening at http://%s:%s', host, port)
 
 })
-scrapArticles()
+
 app.get('/askArticles', async function (req, res) {
+    console.log('Fetch new articles...')
     var articles = await scrapArticles()
-    console.log(articles)
+    console.log("FETCH SUCCESSFULL!", articles.length, "Nouveau articles")
     res.send(articles)
 })
