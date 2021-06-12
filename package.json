@@ -12,6 +12,7 @@
     "cheerio": "^1.0.0-rc.10",
     "express": "^4.17.1",
     "got": "^11.8.2",
-    "puppeteer": "^10.0.0"
+    "puppeteer": "^10.0.0",
+    "rss-parser": "^3.12.0"
   }
 }
