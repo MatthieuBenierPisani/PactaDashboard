@@ -43,6 +43,42 @@ async function degrees() {
     }))
 }
 
+async function bpce() {
+    return (new Promise(async (resolve, reject) => {
+        try {
+            const response = await got("https://groupebpce.com/toute-l-actualite");
+            const $ = cheerio.load(response.body);
+        
+            $('.News-link').each(function (index, element) {
+                if (element.children[0]) {
+                    var elem = {}
+                    var link = element.attribs.href
+                    if (link.indexOf('\/\/') !== -1) {
+                        elem.url = "https:" + element.attribs.href
+                    } else {
+                        elem.url = "https://groupebpce.com" + element.attribs.href
+                    }
+
+                    fullElem.push(elem)
+                }
+                
+            })
+
+            $('.News-title .ezstring-field').each(function (index, element) {
+                const themes = $(element).text();
+                var elema = {}
+
+                elema.description = themes;
+                fullElem.push(elema)
+            })
+            
+            resolve()
+        } catch (e) {
+            console.log('Error in function', arguments.callee.name, e)
+        }
+    }))
+}
+
 async function bnp() {
     return (new Promise(async (resolve, reject) => {
         try {
@@ -65,37 +101,12 @@ async function bnp() {
     }))
 }
 
-async function bpce() {
-    return (new Promise(async (resolve, reject) => {
-        try {
-            const response = await got("https://groupebpce.com/toute-l-actualite");
-            const $ = cheerio.load(response.body);
-            $('.News-link').each(function (index, element) {
-                if (element.children[0]) {
-                    var elem = {}
-                    var ttitle = element.attribs.href
-                    if (ttitle.indexOf('\/\/') !== -1) {
-                        elem.url = "https:" + element.attribs.href
-                        elem.title = element.attribs.href.replace(/-/g, " ")
-                    } else {
-                        elem.url = "https://groupebpce.com" + element.attribs.href
-                        elem.title = element.attribs.href.replace(/-/g, " ")
-                    }
-                    fullElem.push(elem)
-                }
-            })
-            resolve()
-        } catch (e) {
-            console.log('Error in function', arguments.callee.name, e)
-        }
-    }))
-}
 
 async function scrapArticles(e) {
     return (new Promise(async (resolve, reject) => {
         try {
-            await degrees()
-            await bnp()
+            //await degrees()
+            //await bnp()
             await bpce()
             console.log(fullElem.length)
             resolve(fullElem)
