@@ -181,7 +181,7 @@
                 if (xhr.status === 200) {
                   var resAll = ""
                   for (var i of JSON.parse(xhr.responseText)) {
-                    //console.log(i)
+                    console.log(i)
                     var res = model.replace("[TITLE]", i.title)
                     res = res.replace("[LINK]", i.url)
                     res = res.replace("[DESCRIPTION]", i.description)

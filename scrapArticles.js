@@ -48,30 +48,35 @@ async function bpce() {
         try {
             const response = await got("https://groupebpce.com/toute-l-actualite");
             const $ = cheerio.load(response.body);
-        
+
             $('.News-link').each(function (index, element) {
                 if (element.children[0]) {
                     var elem = {}
                     var link = element.attribs.href
+                    if (element.attribs.title) {
+                        elem.description = element.attribs.title
+                    } else {
+                        elem.description = element.attribs["data-tracking-click-libelle"]
+                    }
                     if (link.indexOf('\/\/') !== -1) {
                         elem.url = "https:" + element.attribs.href
                     } else {
                         elem.url = "https://groupebpce.com" + element.attribs.href
                     }
-
+                    elem.title = $(element.children[3].children[1]).text().trim().replace(/\t/g, " ").replace(/  /g, " ").replace(/  /g, " ").replace(/  /g, " ").replace(/  /g, " ").replace(/\n/g, " ")
                     fullElem.push(elem)
                 }
-                
+
             })
 
-            $('.News-title .ezstring-field').each(function (index, element) {
+            /*$('.News-title .ezstring-field').each(function (index, element) {
                 const themes = $(element).text();
                 var elema = {}
 
                 elema.description = themes;
                 fullElem.push(elema)
-            })
-            
+            })*/
+
             resolve()
         } catch (e) {
             console.log('Error in function', arguments.callee.name, e)
