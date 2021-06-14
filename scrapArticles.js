@@ -95,13 +95,37 @@ async function bnp() {
     }))
 }
 
+async function sc() {
+    return (new Promise(async (resolve, reject) => {
+        try {
+
+            let feed = await parser.parseURL('https://www.sc.com/en/feed/');
+            console.log(feed.title);
+
+            feed.items.forEach(item => {
+                var elem = {}
+                if (item.link) {
+                    elem.title = "STANDARD CHARTERED"
+                    elem.description = item.title
+                    elem.url = item.link
+                    fullElem.push(elem)
+                }
+            });
+            resolve()
+        } catch (e) {
+            console.log('Error in function', arguments.callee.name, e)
+        }
+    }))
+}
+
 
 async function scrapArticles(e) {
     return (new Promise(async (resolve, reject) => {
         try {
             //await degrees()
-            await bnp()
-            await bpce()
+            //await bnp()
+            //await bpce()
+            //await sc()
             console.log(fullElem.length)
             resolve(fullElem)
         } catch (e) {
