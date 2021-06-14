@@ -81,7 +81,7 @@ async function bbva() {
             $('.resource').each(function (index, element) {
                 console.log(element);
                 console.log('here');
-    
+
                 if (element.children[2]) {
                     var elem = {}
                     var link = element.children
@@ -113,12 +113,14 @@ async function societegenerale() {
         try {
             const response = await got("https://www.societegenerale.com/fr/communiques-de-presse");
             const $ = cheerio.load(response.body);
-
+            console.log("dd")
             $('.node--type-communique-presse').each(function (index, element) {
+                var elem = {}
                 if (element.children[3]) {
-                    var elem = {}
-                    var link = element.children[2].attribs.href
-                    console.log(link);
+                    elem.title = "Communiqué de presse"
+                    elem.description = $(element.children[5]).text()
+                    elem.url = "https://www.societegenerale.com" + element.children[7].attribs.href
+                    fullElem.push(elem)
                 }
                 /*
                 if (element.children[0]) {
