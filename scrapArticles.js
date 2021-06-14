@@ -30,10 +30,8 @@ async function degrees() {
                         }
                     }
                 }
-                // elem.url = element.children[0].children[3].children[0].data
                 if (elem.title)
                     fullElem.push(elem)
-                //console.log()
             });
             resolve()
         } catch (e) {
@@ -66,17 +64,7 @@ async function bpce() {
                     elem.title = $(element.children[3].children[1]).text().trim().replace(/\t/g, " ").replace(/  /g, " ").replace(/  /g, " ").replace(/  /g, " ").replace(/  /g, " ").replace(/\n/g, " ")
                     fullElem.push(elem)
                 }
-
             })
-
-            /*$('.News-title .ezstring-field').each(function (index, element) {
-                const themes = $(element).text();
-                var elema = {}
-
-                elema.description = themes;
-                fullElem.push(elema)
-            })*/
-
             resolve()
         } catch (e) {
             console.log('Error in function', arguments.callee.name, e)
@@ -94,8 +82,9 @@ async function bnp() {
             feed.items.forEach(item => {
                 var elem = {}
                 if (item.link) {
-                    elem.title = item.title
-                    elem.link = item.link
+                    elem.title = "BNP PARIBAS"
+                    elem.description = item.title
+                    elem.url = item.link
                     fullElem.push(elem)
                 }
             });
@@ -111,7 +100,7 @@ async function scrapArticles(e) {
     return (new Promise(async (resolve, reject) => {
         try {
             //await degrees()
-            //await bnp()
+            await bnp()
             await bpce()
             console.log(fullElem.length)
             resolve(fullElem)
