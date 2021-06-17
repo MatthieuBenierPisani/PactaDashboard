@@ -3,7 +3,7 @@ var app = express()
 var scrapArticles = require('./scrapArticles.js').scrapArticles
 
 
-//app.use(express.static('www'));
+app.use(express.static('www'));
 
 var server = app.listen(8000, function () {
 
