@@ -3,7 +3,22 @@ const cheerio = require('cheerio');
 let Parser = require('rss-parser');
 let parser = new Parser();
 
+var keywords = ['environnement', 'PACTA', 'pacta', 'Pacta', 'Sustainability', 'sustainability', 'sustainable', 'environnemental',
+                'RSE', 'ESG', 'durable', 'Durable', 'développement durable', 'carbone', 'Carbone', 'charbon', 'pétrole', 'oil', 
+                'décarbonisation', 'empreinte carbone', 'CO2', 'finance durable', 'ecology', 'Ecology', 'écologie', 'Écologie',
+                'sustainable development', 'green deal', 'gaz à effets de serre', 'scope 1', 'scope 2', 'émissions', 'pollution', 
+                'obligations vertes', 'green bonds', 'énergies', 'Énergies', 'énergies fossible', 'énergies renouvelabes', 'coal', 'katowice', 
+                'Katowice'];
+
 var fullElem = []
+
+function check_passed_word(word) {
+    for (let i = 0; i < keywords.length; i++) {
+        if (word.includes(keywords[i]))
+            return (1);
+    }
+    return (0);
+}
 
 async function degrees() {
     return (new Promise(async (resolve, reject) => {
@@ -13,8 +28,6 @@ async function degrees() {
             $('div[class="work-item"]').find('div').each(function (index, element) {
                 var elem = {}
                 if (element.children[0].children && element.children[0].children[1]) {
-                    //console.log(element.children[0].children[1].children[0].data) // title
-                    //console.log(element.children[0].children[3].children[0].data) // description
                     if (element.children[0].children[1].children[0].data.indexOf('screen and') === -1) {
                         elem.title = element.children[0].children[1].children[0].data
                         elem.description = element.children[0].children[3].children[0].data
@@ -30,8 +43,9 @@ async function degrees() {
                         }
                     }
                 }
-                if (elem.title)
-                    fullElem.push(elem)
+                if (elem.title && check_passed_word(elem.title) === 1) {
+                        fullElem.push(elem)
+                }
             });
             resolve()
         } catch (e) {
@@ -62,7 +76,8 @@ async function bpce() {
                         elem.url = "https://groupebpce.com" + element.attribs.href
                     }
                     elem.title = $(element.children[3].children[1]).text().trim().replace(/\t/g, " ").replace(/  /g, " ").replace(/  /g, " ").replace(/  /g, " ").replace(/  /g, " ").replace(/\n/g, " ")
-                    fullElem.push(elem)
+                    if (check_passed_word(elem.title) === 1)
+                        fullElem.push(elem)
                 }
             })
             resolve()
@@ -90,13 +105,6 @@ async function bbva() {
                     } else {
                         elem.description = element.attribs["data-tracking-click-libelle"]
                     }
-                    /*
-                    if (link.indexOf('\/\/') !== -1) {
-                        elem.url = "https:" + element.attribs.href
-                    } else {
-                        elem.url = "https://groupebpce.com" + element.attribs.href
-                    }
-                    */
                     elem.title = $(element.children[3].children[1]).text().trim().replace(/\t/g, " ").replace(/  /g, " ").replace(/  /g, " ").replace(/  /g, " ").replace(/  /g, " ").replace(/\n/g, " ")
                     fullElem.push(elem)
                 }
@@ -116,30 +124,12 @@ async function societegenerale() {
             console.log("dd")
             $('.node--type-communique-presse').each(function (index, element) {
                 var elem = {}
-                if (element.children[3]) {
+                if (element.children[3] && (check_passed_word($(element.children[5]).text()) === 1)) {
                     elem.title = "Communiqué de presse"
                     elem.description = $(element.children[5]).text()
                     elem.url = "https://www.societegenerale.com" + element.children[7].attribs.href
                     fullElem.push(elem)
                 }
-                /*
-                if (element.children[0]) {
-                    var elem = {}
-                    var link = element.attribs.href
-                    if (element.attribs.title) {
-                        elem.description = element.attribs.title
-                    } else {
-                        elem.description = element.attribs["data-tracking-click-libelle"]
-                    }
-                    if (link.indexOf('\/\/') !== -1) {
-                        elem.url = "https:" + element.attribs.href
-                    } else {
-                        elem.url = "https://groupebpce.com" + element.attribs.href
-                    }
-                    elem.title = $(element.children[3].children[1]).text().trim().replace(/\t/g, " ").replace(/  /g, " ").replace(/  /g, " ").replace(/  /g, " ").replace(/  /g, " ").replace(/\n/g, " ")
-                    fullElem.push(elem)
-                }
-                */
             })
             resolve()
         } catch (e) {
@@ -158,8 +148,8 @@ async function bnp() {
 
             feed.items.forEach(item => {
                 var elem = {}
-                if (item.link) {
-                    elem.title = "BNP PARIBAS"
+                if (item.title && (check_passed_word(item.title) === 1)) {
+                    elem.title = "BNP PARIBAS";
                     elem.description = item.title
                     elem.url = item.link
                     fullElem.push(elem)
@@ -181,7 +171,7 @@ async function sc() {
 
             feed.items.forEach(item => {
                 var elem = {}
-                if (item.link) {
+                if (item.title && (check_passed_word(item.title) === 1)) {
                     elem.title = "STANDARD CHARTERED"
                     elem.description = item.title
                     elem.url = item.link
@@ -204,7 +194,7 @@ async function newsroom() {
 
             feed.items.forEach(item => {
                 var elem = {}
-                if (item.link) {
+                if (item.title && (check_passed_word(item.title) === 1)) {
                     elem.title = "NEWSROOM ING"
                     elem.description = item.title
                     elem.url = item.link
@@ -222,12 +212,12 @@ async function scrapArticles(e) {
     return (new Promise(async (resolve, reject) => {
         try {
             //await degrees()
-            //await bnp()
-            //await bpce()
+            await bnp()
+            await bpce()
             //await bbva()
             await societegenerale()
-            //await sc()
-            //await newsroom()
+            await sc()
+            await newsroom()
             console.log(fullElem.length)
             resolve(fullElem)
         } catch (e) {

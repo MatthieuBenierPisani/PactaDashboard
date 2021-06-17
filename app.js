@@ -3,7 +3,7 @@ var app = express()
 var scrapArticles = require('./scrapArticles.js').scrapArticles
 
 
-app.use(express.static('www'));
+//app.use(express.static('www'));
 
 var server = app.listen(8000, function () {
 
@@ -13,7 +13,7 @@ var server = app.listen(8000, function () {
     console.log('Express app listening at http://%s:%s', host, port)
 
 })
-scrapArticles()
+//scrapArticles()
 app.get('/askArticles', async function (req, res) {
     console.log('Fetch new articles...')
     var articles = await scrapArticles()
