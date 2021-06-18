@@ -22,3 +22,5 @@ app.get('/askArticles', async function (req, res) {
     console.log("FETCH SUCCESSFULL!", articles.length, "Nouveau articles")
     res.send(articles)
 })
+
+module.exports = app
